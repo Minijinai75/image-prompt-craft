@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小縫補工坊｜給 Mini 的 Image Prompt</title>
+  <meta name="description" content="兩分鐘學會六層順序與最小修改原則。第一輪先穩住，之後只補最重要的那一針。">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/craft.css">
+</head>
+<body>
+  <a class="skip" href="#main">跳到內容</a>
+  <header class="topbar">
+    <a class="brand" href="#top">
+      <img src="assets/img/mascot-stitch.jpg" width="42" height="42" alt="縫縫兔">
+      小縫補工坊
+    </a>
+    <nav class="topnav" aria-label="主要">
+      <a href="#method">方法</a>
+      <a href="#layers">六層</a>
+      <a href="#clinic">診間</a>
+      <a href="#play">工坊</a>
+      <a href="#templates">模板</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" id="top">
+      <div>
+        <p class="eyebrow">給 Mini 的暖暖小課</p>
+        <h1>第一輪先穩住，<br>之後只補一針。</h1>
+        <p class="lead">不是偷偷連生很多張再挑最好的。是：先縫出穩定底圖，後續每一輪只修最重要的偏差。</p>
+        <p>兩分鐘學會順序，再把能複製的句子帶回家。提示詞例子都是英文；旁邊的說明是中文，慢慢看就好。</p>
+        <div class="stack-metaphor" aria-hidden="true">
+          <div class="layer-chip">1 任務：Edit，不是重畫</div>
+          <div class="layer-chip">2 不能變的：身份先鎖</div>
+          <div class="layer-chip">3 這一輪只改一件事</div>
+          <div class="layer-chip">4 具體結果，不要空形容詞</div>
+          <div class="layer-chip">5 攝影語言</div>
+          <div class="layer-chip">6 風格最後才出場</div>
+        </div>
+        <p class="patch-note">縫縫原則：不要整張重畫，像補衣服一樣只補破洞。</p>
+      </div>
+      <div class="hero-art">
+        <span class="tape tape-l" aria-hidden="true"></span>
+        <span class="tape tape-r" aria-hidden="true"></span>
+        <img src="assets/img/hero-patch.jpg" width="1280" height="720" alt="縫縫兔坐在小工坊桌前，把一塊布補在拍立得照片上，旁邊疊著柔柔的色紙層。">
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="method">
+      <h2>兩分鐘方法</h2>
+      <p class="lead">真正重要的不是第一次塞超長 prompt，而是第一輪建立穩定基準，後面每一輪只修最重要的那一處。</p>
+      <div class="grid-2">
+        <article class="card">
+          <span class="pill">第一輪</span>
+          <h3>縫出底圖</h3>
+          <p>理解你想保留與改變的東西，整理成模型容易遵守的句子，<strong>一次生成</strong>。可以寫人、場景、構圖、光線、服裝、色調。</p>
+        </article>
+        <article class="card">
+          <span class="pill">第二輪以後</span>
+          <h3>只修最重要的錯</h3>
+          <p>臉好、光好、衣服好，只是虹膜顏色錯了？不要重寫「美麗婚紗照」。這等於叫模型重新生成一次。</p>
+        </article>
+      </div>
+      <ol class="steps">
+        <li>先理解：什麼必須留、什麼才要改。</li>
+        <li>重寫成模型容易遵守的 prompt。</li>
+        <li>一次生成。</li>
+        <li>看錯在哪裡，再做 targeted edit / refinement。</li>
+      </ol>
+    </section>
+
+    <section class="wrap" id="layers">
+      <div class="reveal">
+        <h2>六層疊紙</h2>
+        <p class="lead">點一層，看弱句子與強句子並排。順序本身就是方法。</p>
+        <figure class="spot">
+          <span class="tape tape-l" aria-hidden="true"></span>
+          <img src="assets/img/layers-cake.jpg" width="1280" height="960" alt="六層粉彩色紙像蛋糕一樣疊著，一隻圓圓小熊把最上面那張最後才放上去。">
+        </figure>
+      </div>
+
+      <div class="layer-dock" role="tablist" aria-label="六層步驟">
+        <button type="button" role="tab" data-layer="task" aria-selected="true">1 任務</button>
+        <button type="button" role="tab" data-layer="invariants">2 不能變</button>
+        <button type="button" role="tab" data-layer="change">3 只改這個</button>
+        <button type="button" role="tab" data-layer="concrete">4 具體結果</button>
+        <button type="button" role="tab" data-layer="photo">5 攝影語言</button>
+        <button type="button" role="tab" data-layer="style">6 風格最後</button>
+      </div>
+
+      <div class="layer-panel card reveal">
+        <h3 id="layer-title">任務類型</h3>
+        <p id="layer-blurb">先講清楚這一輪在做什麼。</p>
+        <div class="compare">
+          <div class="prompt-box weak">
+            <span class="tag" id="weak-label">弱</span>
+            <pre id="weak-prompt">Generate a similar portrait.</pre>
+          </div>
+          <div class="prompt-box strong">
+            <span class="tag" id="strong-label">強</span>
+            <pre id="strong-prompt">Edit the provided image while preserving the original subject identity.</pre>
+            <button type="button" class="copy" data-copy="#strong-prompt">複製強句</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="identity">
+      <h2>身份要拆開鎖</h2>
+      <p class="lead">只寫 keep the face，模型還是會亂改。把身份拆成具體維度，並告訴它「最常犯的錯不要做」。</p>
+      <div class="card">
+        <div class="prompt-box strong">
+          <span class="tag">Preserve 清單</span>
+          <pre>Preserve:
+- facial geometry
+- eye shape and spacing
+- eyebrow shape
+- nose structure
+- lip shape
+- jawline
+- cheek structure
+- hairstyle and hairline
+- skin tone
+- recognizable identity</pre>
+          <button type="button" class="copy" data-copy>複製</button>
+        </div>
+      </div>
+      <div class="do-dont" style="margin-top:16px">
+        <div class="dont">
+          <h3>常見錯，請不要</h3>
+          <p>不要 reinterpret、idealize、beautify 臉。不要改年齡、族裔、臉部比例或身份。</p>
+        </div>
+        <div class="do">
+          <h3>更強的擋錯句</h3>
+          <div class="prompt-box strong">
+            <pre>Do not reinterpret the face.
+Do not idealize the face.
+Do not beautify the facial structure.
+Do not change age, ethnicity, facial proportions, or identity.</pre>
+            <button type="button" class="copy" data-copy>複製</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="only">
+      <h2>三個小咒語</h2>
+      <p>對 image editing 特別有用。第二輪以後，這就是最小修改原則。</p>
+      <div class="keys">
+        <span class="key">only</span>
+        <span class="key">everything else remains unchanged</span>
+        <span class="key">do not alter...</span>
+      </div>
+      <article class="card" style="margin-top:18px">
+        <span class="pill">Minimal Edit Principle</span>
+        <h3>眼睛顏色錯了，就只改虹膜</h3>
+        <p>臉、光、衣服都對的時候，第二輪不要重寫整張美麗婚紗。告訴模型：現在是 debug，不是重新創作。</p>
+        <div class="prompt-box strong">
+          <pre>Edit the previous image.
+
+Change ONLY the iris color to natural golden amber.
+
+Do not alter:
+- face
+- eye shape
+- gaze
+- eyelids
+- eyelashes
+- skin
+- hair
+- pose
+- clothing
+- lighting
+- background
+
+Keep everything else identical.
+The golden iris color should look naturally integrated with the existing eye reflections and lighting.</pre>
+          <button type="button" class="copy" data-copy>複製</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="wrap reveal" id="clinic">
+      <h2>失敗診間</h2>
+      <p class="lead">生成失敗後，不要寫「再自然一點」。先判斷是哪一種病，再對症下藥。</p>
+      <figure class="spot">
+        <span class="tape tape-r" aria-hidden="true"></span>
+        <img src="assets/img/clinic-doc.jpg" width="1280" height="960" alt="圓圓的小貓醫生戴著薄荷色小帽，用放大鏡看一張拍立得，旁邊擺著柔柔的小藥瓶。">
+      </figure>
+      <div class="clinic-tabs" role="tablist" aria-label="失敗類型">
+        <button type="button" data-clinic="identity" aria-selected="true">Identity Drift</button>
+        <button type="button" data-clinic="spillover">Edit Spillover</button>
+        <button type="button" data-clinic="style">Over-stylization</button>
+        <button type="button" data-clinic="composition">Composition Drift</button>
+        <button type="button" data-clinic="lighting">Lighting Mismatch</button>
+      </div>
+      <article class="card">
+        <h3 id="clinic-name">Identity Drift</h3>
+        <p><strong>症狀</strong>：<span id="clinic-symptoms">五官跑掉、人突然變漂亮或變年輕、眼睛形狀變了、臉型改了。</span></p>
+        <div class="prompt-box strong">
+          <span class="tag">對症修句</span>
+          <pre id="clinic-fix">Restore the original facial identity from the reference image.
+Do not reinterpret or beautify the face.
+Match the original facial geometry and proportions.</pre>
+          <button type="button" class="copy" data-copy="#clinic-fix">複製修句</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="wrap reveal" id="priority">
+      <h2>優先級小枕頭　P0 → P4</h2>
+      <p>模型能力有限時，它最可能犧牲 P4。這是對的。不要為了夢幻感把本人犧牲掉。</p>
+      <div class="prio">
+        <article><strong>P0</strong><br>不可以違反<br><span class="tiny">身份，例如女生的臉</span></article>
+        <article><strong>P1</strong><br>主要修改<br><span class="tiny">例如換男生</span></article>
+        <article><strong>P2</strong><br>構圖與攝影<br><span class="tiny">維持原本構圖</span></article>
+        <article><strong>P3</strong><br>質感<br><span class="tiny">真人皮膚與自然光</span></article>
+        <article><strong>P4</strong><br>風格<br><span class="tiny">浪漫婚紗攝影</span></article>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="formulas">
+      <h2>三張配方卡</h2>
+      <div class="grid-3">
+        <article class="formula">
+          <h3>新圖生成</h3>
+          <div class="prompt-box strong">
+            <pre>Subject
++ Composition
++ Environment
++ Lighting
++ Material / Texture
++ Style</pre>
+            <button type="button" class="copy" data-copy>複製</button>
+          </div>
+        </article>
+        <article class="formula">
+          <h3>圖片修改</h3>
+          <div class="prompt-box strong">
+            <pre>Base Image
++ Preserve
++ Change ONLY X
++ Integration Rules
++ Avoid</pre>
+            <button type="button" class="copy" data-copy>複製</button>
+          </div>
+        </article>
+        <article class="formula">
+          <h3>修正圖片</h3>
+          <div class="prompt-box strong">
+            <pre>Previous Result
++ What is already correct
++ Fix ONLY X
++ Protect everything else</pre>
+            <button type="button" class="copy" data-copy>複製</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="rules">
+      <h2>八條小規則　三十秒看完</h2>
+      <div class="rules">
+        <article><span class="num">1</span>先寫不能變的，再寫要變的。</article>
+        <article><span class="num">2</span>人物身份比風格優先。</article>
+        <article><span class="num">3</span>Edit 與 Generate 要明確區分。</article>
+        <article><span class="num">4</span>一輪最好只解決一類主要問題。</article>
+        <article><span class="num">5</span>「自然」要拆成皮膚、光線、眼睛、材質。</article>
+        <article><span class="num">6</span>不要用大量空泛形容詞。</article>
+        <article><span class="num">7</span>第二輪以後使用 Minimal Edit Principle。</article>
+        <article><span class="num">8</span>Prompt 的目的不是華麗，是降低模型的自由度。</article>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="universal">
+      <h2>懶人萬用短版</h2>
+      <p>如果你懶得寫，從這裡開始。記得把括號換成你真正要改的那一件事。</p>
+      <div class="prompt-box strong">
+        <pre id="short-template">Edit the provided image.
+
+Preserve the original subject identity, facial structure, hairstyle, pose, composition, and lighting.
+
+Change ONLY:
+[你要修改的內容]
+
+Do not alter any unrelated part of the image.
+
+Keep facial geometry and recognizable identity unchanged.
+
+Use realistic skin texture, natural lighting, physically plausible shadows, and restrained post-processing.
+
+Avoid identity drift, facial redesign, plastic skin, exaggerated eyes, and unnecessary stylization.
+
+The result should look like the original photograph with only the requested change naturally applied.</pre>
+        <button type="button" class="copy" data-copy="#short-template">複製萬用版</button>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="anchor">
+      <h2>角色錨點，不是選美</h2>
+      <p class="lead">同一張臉要跨很多張圖時，準備 3～5 張互補角度。正面最清楚的那張是 Primary；其他是 Secondary。Reference 的工作是保存身份，不是參加選美。</p>
+      <figure class="spot">
+        <img src="assets/img/identity-faces.jpg" width="1280" height="960" alt="同一隻圓圓縫縫兔從正面、左右四分之三側與左右正側臉被溫柔地畫在一張參考表上。">
+      </figure>
+      <div class="faces">
+        <article class="face-card primary">
+          <h3>Primary Identity Anchor</h3>
+          <p>正面、平視、中性表情。最清楚、最接近標準設定。衝突時永遠聽它的，不要把每張臉平均成「都有一點像」。</p>
+        </article>
+        <article class="face-card">左 3/4　約 45°</article>
+        <article class="face-card">右 3/4　約 45°</article>
+        <article class="face-card">左正側　約 90°</article>
+        <article class="face-card">右正側　約 90°</article>
+      </div>
+      <div class="grid-2" style="margin-top:16px">
+        <article class="card">
+          <h3>3～5 張就很好</h3>
+          <p>1 張主錨 + 2～4 張次要幾何。超過 6～8 張不一定更穩；年齡、濾鏡、髮際線不一致，模型會平均出一張陌生人。</p>
+        </article>
+        <article class="card">
+          <h3>臉與服裝分開</h3>
+          <p>身份圖管臉；設計圖管身材、髮長、衣服。不要讓所有圖片同時爭奪「誰才是這個人」。</p>
+        </article>
+      </div>
+      <div class="prompt-box strong" style="margin-top:16px">
+        <span class="tag">多張 reference 時講清楚分工</span>
+        <pre>Reference 1 is the PRIMARY IDENTITY ANCHOR.
+Use it as the authoritative source for facial identity and recognizable features.
+
+References 2–5 are SECONDARY GEOMETRY REFERENCES.
+Use them only to understand the same person's facial structure from different angles.
+
+If any reference appears inconsistent, prioritize Reference 1.
+Do not average conflicting facial traits across references.</pre>
+        <button type="button" class="copy" data-copy>複製</button>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="play">
+      <h2>自己縫一句</h2>
+      <p class="lead">選任務、選要改什麼，工坊會用骨架幫你拼起來。全程在瀏覽器裡，沒有後端。</p>
+      <figure class="spot">
+        <span class="tape tape-l" aria-hidden="true"></span>
+        <img src="assets/img/workshop-desk.jpg" width="1280" height="960" alt="整潔的迷你工坊桌：色紙、拍立得、線軸、圓圓的小剪刀與兩個紙人偶。">
+      </figure>
+      <div class="card">
+        <p><strong>這一次要做什麼？</strong></p>
+        <div class="task-tabs" role="tablist" aria-label="任務">
+          <button type="button" data-task="edit" aria-selected="true">Edit 修改</button>
+          <button type="button" data-task="generate">Generate 新圖</button>
+          <button type="button" data-task="replace">Replace 換人</button>
+        </div>
+        <p><strong>這一輪只改？</strong></p>
+        <div class="change-chips">
+          <button type="button" data-change="clothing" aria-selected="true">衣服</button>
+          <button type="button" data-change="background">背景</button>
+          <button type="button" data-change="iris">虹膜顏色</button>
+          <button type="button" data-change="lighting">光線</button>
+          <button type="button" data-change="male">換男生</button>
+        </div>
+        <label for="custom-change">或自己寫要改的那一件事（英文較穩）</label>
+        <input id="custom-change" type="text" placeholder="the clothing to a white wedding dress">
+        <p style="margin-top:16px"><strong>拼好的 prompt</strong></p>
+        <div class="prompt-box strong">
+          <pre id="play-prompt"></pre>
+          <button type="button" class="copy" data-copy="#play-prompt">複製這句</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap reveal" id="templates">
+      <h2>可複製的工具箱</h2>
+      <p>預設收起來，需要再打開。都來自原指南，沒有另外發明技法。</p>
+
+      <details class="template">
+        <summary>骨架｜常用 Prompt 骨架</summary>
+        <div class="prompt-box strong">
+          <pre>[Task]
+
+Edit the provided image.
+
+[Primary objective]
+
+Change ONLY __________.
+
+[Identity preservation]
+
+Preserve the original subject's identity exactly.
+Keep facial structure, eyes, nose, lips, jawline, face proportions, hairstyle, skin tone, and recognizable features unchanged.
+
+[Preserve]
+
+Keep the original:
+- pose
+- facial expression
+- camera angle
+- framing
+- composition
+- lighting direction
+
+[Requested changes]
+
+Change:
+- __________
+- __________
+
+[Visual quality]
+
+Natural realistic photography.
+Realistic skin texture and pores.
+Physically plausible lighting.
+Natural shadows and reflections.
+Realistic fabric and material texture.
+
+[Avoid]
+
+Do not redesign the face.
+Do not beautify or reshape facial features.
+Do not change age or identity.
+Do not alter unrelated parts of the image.
+Avoid plastic skin, excessive sharpening, uncanny eyes, and artificial HDR.</pre>
+          <button type="button" class="copy" data-copy>複製骨架</button>
+        </div>
+      </details>
+
+      <details class="template">
+        <summary>換人｜身份來自 B，攝影環境來自 A</summary>
+        <div class="prompt-box strong">
+          <pre>Edit the first image.
+
+Replace ONLY the male subject with the male subject from the second reference image.
+
+Preserve the replacement male's:
+- facial identity
+- facial proportions
+- eye shape
+- nose
+- lips
+- jawline
+- hairstyle
+- hair color
+- iris color
+
+Adapt only his:
+- pose
+- perspective
+- scale
+- lighting
+- shadows
+- color temperature
+
+so that he naturally fits the first image.
+
+Keep the female subject from the first image completely unchanged.
+
+Do not modify her face, hair, body, expression, clothing, or skin.
+
+Preserve the original composition, camera angle, framing, background, and lighting.
+
+The final image should look like an authentic photograph of both people together, not a face swap or collage.</pre>
+          <button type="button" class="copy" data-copy>複製換人</button>
+        </div>
+      </details>
+
+      <details class="template">
+        <summary>修正輪｜已經對的不要重畫</summary>
+        <div class="prompt-box strong">
+          <pre>Use the previous image as the base.
+
+The current image is already correct in:
+- identity
+- composition
+- pose
+- clothing
+- background
+- lighting
+
+Do not regenerate these elements.
+
+Fix ONLY:
+[問題]
+
+Target result:
+[精確描述]
+
+Preserve everything else exactly as it is.</pre>
+          <button type="button" class="copy" data-copy>複製修正輪</button>
+        </div>
+      </details>
+
+      <details class="template">
+        <summary>Prompt Writer System｜給另一個 AI 重寫用</summary>
+        <div class="prompt-box strong">
+          <pre>You are an expert image-generation prompt engineer.
+
+Your job is to convert the user's visual request into a precise, model-friendly image generation or image editing prompt.
+
+Follow these priorities:
+
+1. Identify whether the task is generation, editing, replacement, outpainting, restyling, relighting, or retouching.
+
+2. Separate the request into:
+   - elements that MUST remain unchanged
+   - elements that SHOULD change
+   - photographic / rendering properties
+   - optional stylistic preferences
+
+3. When editing an existing image, prioritize preservation over creativity.
+
+4. When identity preservation is requested, explicitly preserve:
+   - facial geometry
+   - eye shape and spacing
+   - eyebrows
+   - nose
+   - lips
+   - jawline
+   - hairstyle
+   - skin tone
+   - recognizable identity
+
+5. Never use vague instructions such as "make it more natural" without converting them into concrete visual properties.
+
+6. Use specific photographic language when realism is requested:
+   - realistic skin micro-texture
+   - physically plausible light
+   - natural shadow falloff
+   - realistic eye reflections
+   - material-specific texture
+   - restrained post-processing
+
+7. For image editing, use the Minimal Edit Principle:
+   modify only the requested element and explicitly protect everything else.
+
+8. For follow-up refinement prompts:
+   do NOT rewrite the entire creative prompt.
+   State what is already correct and instruct the model to fix only the remaining issue.
+
+9. Avoid adjective spam such as:
+   masterpiece, stunning, amazing, gorgeous, ultra beautiful.
+   Replace vague adjectives with concrete visual instructions.
+
+10. Resolve contradictory instructions before writing the final prompt.
+
+Output structure:
+
+TASK
+[task type]
+
+PRIMARY OBJECTIVE
+[main requested change]
+
+PRESERVE
+[everything that must remain unchanged]
+
+CHANGE
+[everything that should change]
+
+VISUAL / PHOTOGRAPHIC TARGET
+[lighting, texture, lens, realism, materials]
+
+AVOID
+[only the most relevant failure modes]
+
+Return one clean production-ready prompt.</pre>
+          <button type="button" class="copy" data-copy>複製 System</button>
+        </div>
+      </details>
+    </section>
+  </main>
+
+  <footer class="footer wrap reveal">
+    <img src="assets/img/goodnight.jpg" width="1280" height="720" alt="睏睏的縫縫兔抱著一張完成的拍立得，月亮軟軟地掛在蜜桃色夜空。">
+    <p class="hand" style="font-size:28px;margin:0 0 8px">今天就縫到這裡。</p>
+    <p>好的 image prompt 不是越長越好，而是每一句都在降低一種失敗機率。</p>
+    <p>問自己：我要改什麼？什麼不能改？要長什麼樣子？要怎麼融入原圖？最可能犯什麼錯？如何避免？</p>
+    <p>來源指南：<a href="https://github.com/Minijinai75/mini-grok-team/blob/main/notes/image_prompt_engineering_guide_zh_TW.md">image_prompt_engineering_guide_zh_TW.md</a></p>
+    <p class="tiny">為 Mini 縫的小站。沒有追蹤、沒有後端。提示詞例子維持英文。</p>
+  </footer>
+
+  <script src="assets/js/craft.js"></script>
+</body>
+</html>
