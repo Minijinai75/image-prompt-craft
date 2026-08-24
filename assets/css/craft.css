@@ -99,6 +99,16 @@ a:hover {
   color: inherit;
   font-family: var(--font-display);
   font-weight: 700;
+  white-space: nowrap;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--peach-deep);
+  outline-offset: 2px;
 }
 
 .brand img {
@@ -637,4 +647,7 @@ details.template summary {
   .faces { grid-template-columns: 1fr 1fr; }
   .face-card.primary { grid-column: 1 / -1; grid-row: auto; }
   .prio { grid-template-columns: 1fr; }
+  .brand { font-size: 15px; }
+  .topnav a { padding: 5px 10px; font-size: 13px; }
+  .layer-dock { top: 58px; }
 }
