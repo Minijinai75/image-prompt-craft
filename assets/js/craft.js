@@ -148,27 +148,27 @@
 
   var clinic = {
     identity: {
-      name: "Identity Drift",
+      name: "人設走鐘",
       symptoms: "五官跑掉、人突然變漂亮或變年輕、眼睛形狀變了、臉型改了。",
       fix: "Restore the original facial identity from the reference image.\nDo not reinterpret or beautify the face.\nMatch the original facial geometry and proportions."
     },
     spillover: {
-      name: "Edit Spillover",
+      name: "改一處壞一處",
       symptoms: "本來只叫它改衣服，結果背景、臉、姿勢也一起改。",
       fix: "Modify ONLY the clothing.\nAll unmentioned image regions must remain unchanged.\n\nTreat all non-clothing pixels as protected content."
     },
     style: {
-      name: "Over-stylization",
+      name: "風格過濃",
       symptoms: "太像 AI、皮膚太滑、眼睛太亮、打光過度、像遊戲 CG。",
       fix: "Reduce stylization.\nUse documentary-style photographic realism.\nPreserve natural skin imperfections and micro-texture.\nAvoid beauty-filter skin, CGI smoothness, exaggerated catchlights, and artificial glow."
     },
     composition: {
-      name: "Composition Drift",
+      name: "構圖走位",
       symptoms: "人位置跑掉、原本半身變全身、相機角度變了。",
       fix: "Match the original composition exactly.\nKeep the same camera position, crop, body placement, head size, perspective, and framing."
     },
     lighting: {
-      name: "Lighting Mismatch",
+      name: "光線對不起",
       symptoms: "換進去的人看起來像貼上去。",
       fix: "Match the inserted subject to the original scene's:\n- light direction\n- light intensity\n- color temperature\n- shadow softness\n- contrast\n- exposure\n- depth of field\n\nThe result must look like both subjects were photographed together in the same shot."
     }
